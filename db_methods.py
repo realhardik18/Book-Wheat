@@ -63,3 +63,7 @@ def AddTweetInCategory(user_id, category_name, url_to_tweet):
             category['data'].append(url_to_tweet)
             redis_client.set(user_id, str(data))
             break
+
+
+#AddUser(user_id=1553622983142670336, username='bookwheat')
+# print(ShowSpecifcUserData(user_id=1553622983142670336))

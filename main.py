@@ -1,6 +1,8 @@
 import tweepy
 # https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
 from creds import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
+from twitter_methods import GetLastCheckedTweetID, UpdateLastCheckedTweetID
+from db_methods import GetAllCategories, AddTweetInCategory, AddCategory
 import time
 import json
 client = tweepy.Client(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET,
@@ -50,15 +52,12 @@ for tweet in search_mentions()[0]:
 '''
 
 while True:
-    with open('seen.json') as json_file:
-        data = json.load(json_file)
-    mentioned_tweets = search_mentions(last_tweet_id=data['last_tweet'])[0]
+    mentioned_tweets = search_mentions(
+        last_tweet_id=GetLastCheckedTweetID())[0]
     if mentioned_tweets != None:
         #print('ello', type(mentioned_tweets))
         for tweet in mentioned_tweets:
-            data['last_tweet'] = tweet.id
-            with open('seen.json', 'w') as outfile:
-                json.dump(data, outfile)
+            UpdateLastCheckedTweetID(tweet.id)
             base_url = 'https://twitter.com/'
             try:
                 main_tweet = tweet.data['referenced_tweets'][0]
@@ -69,18 +68,26 @@ while True:
                 url_to_tweet = base_url+parent_user_name+'/'+'status/'+parent_tweet_id
                 print(tweet.text, tweet.author_id)
                 print(url_to_tweet)
-                with open('profiles.json') as json_file:
-                    profiles = json.load(json_file)
+                '''
                 if str(tweet.author_id) not in profiles['users'].keys():
                     profiles['users'][str(tweet.author_id)] = list()
+                #to check if user exists
+                '''
+
                 data_dict = dict()
                 # data_dict['saved_at'] = tweet.created_at WORK ON THIS LATER
-                data_dict['url_to_parent_tweet'] = url_to_tweet
-                data_dict['category'] = ' '.join(tweet.text.split(
+                url_to_tweet = url_to_tweet
+                category = ' '.join(tweet.text.split(
                     ' ')[tweet.text.split(' ').index('@realhardik18')+1:])
-                profiles['users'][str(tweet.author_id)].append(data_dict)
-                with open('profiles.json', 'w') as outfile:
-                    json.dump(profiles, outfile)
+                # profiles['users'][str(tweet.author_id)].append(data_dict)
+                if category in GetAllCategories(str(tweet.author_id)):
+                    AddTweetInCategory(user_id=str(
+                        tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
+                else:
+                    AddCategory(user_id=str(tweet.author_id),
+                                category_name=category)
+                    AddTweetInCategory(user_id=str(
+                        tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
                 time.sleep(5)
             except KeyError:
                 pass
@@ -97,7 +104,7 @@ while True:
 todo
 get tweets[DONE]
 work on local databse system[DONE]
-intergrate with redis[ON IT ALMOST DONE]
+intergrate with redis[DONE]
 work on flask site
 work on discord aspect
 '''
