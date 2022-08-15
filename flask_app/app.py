@@ -3,6 +3,7 @@ import json
 import ast
 from flask import render_template, Flask, redirect, url_for, request
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
+from db_methods import ShowSpecifcUserData
 from creds import API_KEY, API_SECRET, APP_SECRET_KEY
 
 app = Flask(__name__)
@@ -19,7 +20,14 @@ def index():
     if not twitter.authorized:
         return redirect(url_for("twitter.login"))
     resp = twitter.get("https://api.twitter.com/2/users/me")
+    print(resp)
     return str(resp.text)
 
 
-app.run(debug=True)
+app.run()
+
+'''
+TODO
+MAKE LOGO
+AND UI IN A BETTER MANNER
+'''
