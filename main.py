@@ -97,7 +97,7 @@ while True:
 todo
 get tweets[DONE]
 work on local databse system[DONE]
-intergrate with redis
+intergrate with redis[ON IT ALMOST DONE]
 work on flask site
 work on discord aspect
 '''
