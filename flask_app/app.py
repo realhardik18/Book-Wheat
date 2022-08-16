@@ -20,11 +20,15 @@ def index():
     if not twitter.authorized:
         return redirect(url_for("twitter.login"))
     resp = twitter.get("https://api.twitter.com/2/users/me")
-    print(resp)
-    return str(resp.text)
+    user_id = ast.literal_eval(str(resp.text))['data']['id']
+    data = ShowSpecifcUserData(user_id=user_id)
+    print(data)
+    return resp.text
+# work from here
+# work on checking if user exits and logic and ui
 
 
-app.run()
+app.run(debug=True)
 
 '''
 TODO
