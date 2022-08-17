@@ -3,7 +3,7 @@ import json
 import ast
 from flask import render_template, Flask, redirect, url_for, request
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
-from db_methods import ShowSpecifcUserData
+from db_methods import ShowSpecifcUserData, CheckIfUserExists, AddUser
 from creds import API_KEY, API_SECRET, APP_SECRET_KEY
 
 app = Flask(__name__)
@@ -21,6 +21,9 @@ def home():
         return render_template('login.html')
     resp = twitter.get("https://api.twitter.com/2/users/me")
     user_id = ast.literal_eval(str(resp.text))['data']['id']
+    username = ast.literal_eval(str(resp.text))['data']['username']
+    if CheckIfUserExists(user_id=user_id) == None:
+        AddUser(user_id=user_id, username=username)
     data = ShowSpecifcUserData(user_id=user_id)
     return render_template('home.html', username=data['username'], category_data=data['categories'])
 

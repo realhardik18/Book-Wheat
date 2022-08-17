@@ -12,3 +12,6 @@ def GetLastCheckedTweetID():
 
 def UpdateLastCheckedTweetID(tweet_id):
     redis_client.set('last_seen', tweet_id)
+
+
+# print(GetLastCheckedTweetID())

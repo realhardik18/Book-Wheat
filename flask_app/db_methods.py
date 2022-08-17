@@ -6,6 +6,13 @@ redis_client = redis.Redis(
     host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
 
 
+def CheckIfUserExists(user_id):
+    for key in redis_client.scan_iter():
+        #print(str(key)[2:-1], user_id)
+        if str(key)[2:-1] == str(user_id):
+            return True
+
+
 def DeleteAllUsers():
     for key in redis_client.scan_iter():
         redis_client.delete(key)
@@ -67,3 +74,4 @@ def AddTweetInCategory(user_id, category_name, url_to_tweet):
 
 #AddUser(user_id=1553622983142670336, username='bookwheat')
 # print(ShowSpecifcUserData(user_id=1553622983142670336))
+#print(CheckIfUserExists(user_id=1553622983142670336))

@@ -23,7 +23,7 @@ def like_tweet(tweet_to_like_id):
 
 
 def search_mentions(last_tweet_id):
-    return client.get_users_mentions(id=1315843447752814592, user_auth=True, since_id=last_tweet_id, expansions='referenced_tweets.id,referenced_tweets.id.author_id')
+    return client.get_users_mentions(id=1474790376259031044, user_auth=True, since_id=last_tweet_id, expansions='referenced_tweets.id,referenced_tweets.id.author_id')
 
 
 def get_tweet(id):
@@ -78,7 +78,7 @@ while True:
                 # data_dict['saved_at'] = tweet.created_at WORK ON THIS LATER
                 url_to_tweet = url_to_tweet
                 category = ' '.join(tweet.text.split(
-                    ' ')[tweet.text.split(' ').index('@realhardik18')+1:])
+                    ' ')[tweet.text.split(' ').index('@Book_Wheat')+1:])
                 # profiles['users'][str(tweet.author_id)].append(data_dict)
                 if category in GetAllCategories(str(tweet.author_id)):
                     AddTweetInCategory(user_id=str(
