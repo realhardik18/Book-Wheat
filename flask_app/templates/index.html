@@ -9,7 +9,13 @@
 </head>
 
 <body>
-    <h1>haha welcome to book BookWheat</h1>
+    <h1>hello {{username}}</h1>
+    {% for item in category_data %}
+    <h2>{{item['name']}}</h2>
+    {% for tweet in item['data'] %}
+    <a href="{{tweet}}">{{tweet}}</a><br>
+    {% endfor %}
+    {% endfor %}
 </body>
 
 </html>

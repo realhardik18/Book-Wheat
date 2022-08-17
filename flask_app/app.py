@@ -22,8 +22,7 @@ def index():
     resp = twitter.get("https://api.twitter.com/2/users/me")
     user_id = ast.literal_eval(str(resp.text))['data']['id']
     data = ShowSpecifcUserData(user_id=user_id)
-    print(data)
-    return resp.text
+    return render_template('index.html', username=data['username'], category_data=data['categories'])
 # work from here
 # work on checking if user exits and logic and ui
 
