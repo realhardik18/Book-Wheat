@@ -15,14 +15,22 @@ blueprint = make_twitter_blueprint(
 app.register_blueprint(blueprint, url_prefix="/login")
 
 
-@app.route("/")
-def index():
+@app.route("/home")
+def home():
     if not twitter.authorized:
-        return redirect(url_for("twitter.login"))
+        return render_template('login.html')
     resp = twitter.get("https://api.twitter.com/2/users/me")
     user_id = ast.literal_eval(str(resp.text))['data']['id']
     data = ShowSpecifcUserData(user_id=user_id)
-    return render_template('index.html', username=data['username'], category_data=data['categories'])
+    return render_template('home.html', username=data['username'], category_data=data['categories'])
+
+
+@app.route("/")
+def index():
+    if not twitter.authorized:
+        return render_template('login.html')
+    return redirect(url_for('home'))
+
 # work from here
 # work on checking if user exits and logic and ui
 
