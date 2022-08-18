@@ -88,12 +88,12 @@ while True:
                                 category_name=category)
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
-                time.sleep(5)
+                time.sleep(180)
             except KeyError:
                 pass
     else:
         print('no new tweets')
-        time.sleep(5)
+        time.sleep(180)
     '''
     note to self
     increase time.sleep() when pushing to prodcution
