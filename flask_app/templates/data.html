@@ -37,9 +37,33 @@
             </div>
         </div>
     </nav>
-    <h1 class="home-welcome">
-        Here are your saved tweets in {{category_name}}
-    </h1>
+    {% for tweet in html_codes%}
+    {% autoescape off %}
+    <div class="tweet-embed">
+        {{ tweet }}
+    </div>
+    {% endautoescape %}
+    {% endfor %}
+    <table class="table table-borderless text-center">
+        <tbody>
+            <tr>
+                <td>
+                    <h1 class="data-welcome">
+                        Here are your saved tweets in {{category_name}}
+                    </h1>
+                </td>
+            </tr>
+            {% for tweet in html_codes%}
+            {% autoescape off %}
+            <tr>
+                <div class="tweet-embed">
+                    {{ tweet }}
+                </div>
+            </tr>
+            {% endautoescape %}
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 
 </html>

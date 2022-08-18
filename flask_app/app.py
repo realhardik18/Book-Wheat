@@ -5,6 +5,7 @@ from flask import render_template, Flask, redirect, url_for, request
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
 from db_methods import ShowSpecifcUserData, CheckIfUserExists, AddUser, GetAllCategories, ShowCategoryData
 from creds import API_KEY, API_SECRET, APP_SECRET_KEY
+from twitter_methods import GetEmbededTweetHTML
 
 app = Flask(__name__)
 app.secret_key = APP_SECRET_KEY
@@ -36,7 +37,7 @@ def index():
 
 
 @app.route('/category/<name>')  # /landingpage/A
-def landing_page(name):
+def tweet_data(name):
     if not twitter.authorized:
         return render_template('login.html')
     resp = twitter.get("https://api.twitter.com/2/users/me")
@@ -45,7 +46,10 @@ def landing_page(name):
     if name in GetAllCategories(user_id=user_id):
         tweets = ShowCategoryData(user_id=user_id, category_name=name)
         data = ShowSpecifcUserData(user_id=user_id)
-        return render_template('data.html', tweets=tweets, category_name=name, username=data['username'])
+        html_data=list()
+        for tweet in tweets:
+            html_data.append(GetEmbededTweetHTML(tweet))
+        return render_template('data.html', tweets=tweets, category_name=name, username=data['username'],html_codes=html_data)
     return redirect(url_for('home'))
 
     # work from here
