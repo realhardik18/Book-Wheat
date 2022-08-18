@@ -1,0 +1,5 @@
+Flask==2.2.2
+Flask_Dance==6.1.0
+redis==4.4.0rc1
+requests==2.27.1
+gunicorn==20.1.0

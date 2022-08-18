@@ -46,17 +46,17 @@ def tweet_data(name):
     if name in GetAllCategories(user_id=user_id):
         tweets = ShowCategoryData(user_id=user_id, category_name=name)
         data = ShowSpecifcUserData(user_id=user_id)
-        html_data=list()
+        html_data = list()
         for tweet in tweets:
             html_data.append(GetEmbededTweetHTML(tweet))
-        return render_template('data.html', tweets=tweets, category_name=name, username=data['username'],html_codes=html_data)
+        return render_template('data.html', tweets=tweets, category_name=name, username=data['username'], html_codes=html_data)
     return redirect(url_for('home'))
 
     # work from here
     # work on checking if user exits and logic and ui
 
 
-app.run(debug=True)
+# app.run(debug=True)
 
 '''
 TODO
