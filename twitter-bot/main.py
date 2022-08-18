@@ -2,7 +2,7 @@ import tweepy
 # https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
 from creds import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
 from twitter_methods import GetLastCheckedTweetID, UpdateLastCheckedTweetID
-from db_methods import GetAllCategories, AddTweetInCategory, AddCategory
+from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser
 import time
 import json
 client = tweepy.Client(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET,
@@ -15,7 +15,7 @@ def tweet(tweet_content):
 
 def reply_to_tweet(tweet_to_reply_to_id, tweet_content):
     client.create_tweet(
-        in_reply_to_tweet_id=tweet_to_reply_to_id, text=tweet_content)
+        in_reply_to_tweet_id=tweet_to_reply_to_id, text=tweet_content, user_auth=True)
 
 
 def like_tweet(tweet_to_like_id):
@@ -23,7 +23,7 @@ def like_tweet(tweet_to_like_id):
 
 
 def search_mentions(last_tweet_id):
-    return client.get_users_mentions(id=1474790376259031044, user_auth=True, since_id=last_tweet_id, expansions='referenced_tweets.id,referenced_tweets.id.author_id')
+    return client.get_users_mentions(id=1474790376259031044, since_id=last_tweet_id, expansions='referenced_tweets.id,referenced_tweets.id.author_id', user_auth=True)
 
 
 def get_tweet(id):
@@ -50,7 +50,7 @@ for tweet in search_mentions()[0]:
     with open('seen.json', 'w') as outfile:
         json.dump(data, outfile)
 '''
-
+print('hello there')
 while True:
     mentioned_tweets = search_mentions(
         last_tweet_id=GetLastCheckedTweetID())[0]
@@ -66,8 +66,8 @@ while True:
                 parent_tweet_id = str(list(data)[0]['id'])
                 parent_user_name = str(list(data)[1]['users'][0])
                 url_to_tweet = base_url+parent_user_name+'/'+'status/'+parent_tweet_id
-                print(tweet.text, tweet.author_id)
-                print(url_to_tweet)
+                #print(tweet.text, tweet.author_id)
+                # print(url_to_tweet)
                 '''
                 if str(tweet.author_id) not in profiles['users'].keys():
                     profiles['users'][str(tweet.author_id)] = list()
@@ -80,6 +80,8 @@ while True:
                 category = ' '.join(tweet.text.split(
                     ' ')[tweet.text.split(' ').index('@Book_Wheat')+1:])
                 # profiles['users'][str(tweet.author_id)].append(data_dict)
+                if CheckIfUserExists(user_id=tweet.author_id) == False:
+                    AddUser(user_id=tweet.author_id)
                 if category in GetAllCategories(str(tweet.author_id)):
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
@@ -88,12 +90,13 @@ while True:
                                 category_name=category)
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
-                time.sleep(180)
+                #reply_to_tweet(tweet_to_reply_to_id=tweet.id,tweet_content=f"Saved the tweet to {category}!")
+                time.sleep(90)
             except KeyError:
-                pass
+                print('oops')
     else:
         print('no new tweets')
-        time.sleep(180)
+        time.sleep(90)
     '''
     note to self
     increase time.sleep() when pushing to prodcution
