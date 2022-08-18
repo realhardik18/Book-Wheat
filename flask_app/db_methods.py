@@ -39,7 +39,10 @@ def ShowSpecifcUserData(user_id):
 
 def GetAllCategories(user_id):
     data = ShowSpecifcUserData(user_id)
-    return data['categories']
+    categories = list()
+    for category in data['categories']:
+        categories.append(category['name'])
+    return categories
 
 
 def AddCategory(user_id, category_name):
@@ -72,6 +75,13 @@ def AddTweetInCategory(user_id, category_name, url_to_tweet):
             break
 
 
+def ShowCategoryData(user_id, category_name):
+    data = ShowSpecifcUserData(user_id)
+    for category in data['categories']:
+        if category['name'] == category_name:
+            return category['data']
+
+
 #AddUser(user_id=1553622983142670336, username='bookwheat')
 # print(ShowSpecifcUserData(user_id=1553622983142670336))
-#print(CheckIfUserExists(user_id=1553622983142670336))
+# print(CheckIfCategoryExits(user_id=1553622983142670336,category_name='water'))
