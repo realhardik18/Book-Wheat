@@ -18,4 +18,5 @@ def UpdateLastCheckedTweetID(tweet_id):
 def GetEmbededTweetHTML(tweet_url):
     resp = requests.get(
         f"https://publish.twitter.com/oembed?url={tweet_url}&theme=dark&conversation=none&cards=hidden&hide_media=true")
-    return resp.json()['html']
+    return f"<center>{resp.json()['html']}<center>"
+

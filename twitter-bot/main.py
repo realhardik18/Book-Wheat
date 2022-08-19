@@ -4,6 +4,7 @@ from creds import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
 from twitter_methods import GetLastCheckedTweetID, UpdateLastCheckedTweetID
 from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser
 import time
+import random
 import json
 client = tweepy.Client(consumer_key=CONSUMER_KEY, consumer_secret=CONSUMER_SECRET,
                        access_token=ACCESS_KEY, access_token_secret=ACCESS_SECRET)
@@ -90,7 +91,8 @@ while True:
                                 category_name=category)
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
-                #reply_to_tweet(tweet_to_reply_to_id=tweet.id,tweet_content=f"Saved the tweet to {category}!")
+                reply_to_tweet(tweet_to_reply_to_id=tweet.id,
+                               tweet_content=f"Saved the tweet! [category name->{category} code->{''.join(random.choice('0123456789ABCDEF') for i in range(4))}]")
                 time.sleep(90)
             except KeyError:
                 print('oops')
