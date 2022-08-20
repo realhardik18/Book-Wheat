@@ -68,6 +68,17 @@ def delete(category_name):
     # work on checking if user exits and logic and ui
 
 
+@app.route('/discord')
+async def discord():
+    if not twitter.authorized:
+        return render_template('login.html')
+    resp = twitter.get("https://api.twitter.com/2/users/me")
+    user_id = ast.literal_eval(str(resp.text))['data']['id']
+    username = ast.literal_eval(str(resp.text))['data']['username']
+    if CheckIfUserExists(user_id=user_id) == None:
+        AddUser(user_id=user_id, username=username)
+    data = ShowSpecifcUserData(user_id=user_id)
+    return render_template('discord.html', username=data['username'], category_data=data['categories'])
     # app.run(debug=True)
 '''
 TODO

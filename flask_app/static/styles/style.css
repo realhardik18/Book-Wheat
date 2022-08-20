@@ -84,3 +84,8 @@ table {
     margin-left: 20px;
     text-align: center;
  }
+
+ .webhook-form{
+    margin-left: 10px;
+    margin-right: 10px;
+ }
