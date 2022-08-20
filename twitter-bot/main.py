@@ -92,7 +92,7 @@ while True:
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
                 reply_to_tweet(tweet_to_reply_to_id=tweet.id,
-                               tweet_content=f"Saved the tweet! [category name->{category} code->{''.join(random.choice('0123456789ABCDEF') for i in range(4))}]")
+                               tweet_content=f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})")
                 time.sleep(90)
             except KeyError:
                 print('oops')

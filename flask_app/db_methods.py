@@ -82,6 +82,15 @@ def ShowCategoryData(user_id, category_name):
             return category['data']
 
 
+def DeleteCategory(user_id, category_name):
+    data = ShowSpecifcUserData(user_id)
+    for category in data['categories']:
+        if category['name'] == category_name:
+            data['categories'].remove(category)
+    redis_client.set(user_id, str(data))
+
+
+#DeleteCategory(user_id=1315843447752814592, category_name='test1111')
 #AddUser(user_id=1553622983142670336, username='bookwheat')
-# print(ShowSpecifcUserData(user_id=1553622983142670336))
+# print(ShowSpecifcUserData(user_id=1315843447752814592))
 # print(CheckIfCategoryExits(user_id=1553622983142670336,category_name='water'))

@@ -1,9 +1,9 @@
 import requests as r
 import json
 import ast
-from flask import render_template, Flask, redirect, url_for, request
+from flask import render_template, Flask, redirect, url_for, request, flash
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
-from db_methods import ShowSpecifcUserData, CheckIfUserExists, AddUser, GetAllCategories, ShowCategoryData
+from db_methods import ShowSpecifcUserData, CheckIfUserExists, AddUser, GetAllCategories, ShowCategoryData, DeleteCategory
 from creds import API_KEY, API_SECRET, APP_SECRET_KEY
 from twitter_methods import GetEmbededTweetHTML
 
@@ -36,7 +36,7 @@ def index():
     return redirect(url_for('home'))
 
 
-@app.route('/category/<name>')  # /landingpage/A
+@app.route('/category/<name>')
 def tweet_data(name):
     if not twitter.authorized:
         return render_template('login.html')
@@ -52,12 +52,23 @@ def tweet_data(name):
         return render_template('data.html', tweets=tweets, category_name=name, username=data['username'], html_codes=html_data)
     return redirect(url_for('home'))
 
+
+@app.route('/delete/<category_name>')
+def delete(category_name):
+    if not twitter.authorized:
+        return render_template('login.html')
+    resp = twitter.get("https://api.twitter.com/2/users/me")
+    user_id = ast.literal_eval(str(resp.text))['data']['id']
+    #username = ast.literal_eval(str(resp.text))['data']['username']
+    if category_name in GetAllCategories(user_id=user_id):
+        DeleteCategory(user_id=user_id, category_name=category_name)
+        flash(f'Deleted category: "{category_name}" successfully!')
+        return redirect(url_for('home'))
     # work from here
     # work on checking if user exits and logic and ui
 
 
-# app.run(debug=True)
-
+    # app.run(debug=True)
 '''
 TODO
 MAKE LOGO
