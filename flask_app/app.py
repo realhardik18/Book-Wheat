@@ -79,7 +79,25 @@ async def discord():
         AddUser(user_id=user_id, username=username)
     data = ShowSpecifcUserData(user_id=user_id)
     return render_template('discord.html', username=data['username'], category_data=data['categories'])
-    # app.run(debug=True)
+
+
+@app.route('/result', methods=['POST'])
+def post():
+    url = request.form['url']
+    category = request.form['input-radios']
+    category = ast.literal_eval(category)['name']
+    '''
+    WORK ON
+    CHeCKING FOR VALID WEBHOOK
+    SAVING THE WEBHOOK DATA
+    AND THEN INTERGATING WITH TWITTER BOT TO SEND THE WEBHOOK
+    MAKE WEBHOOK PRETTY
+    MAKE WEBHOOK METHODS IN WEBHOOKS.PY OR SHMTN
+    https://pypi.org/project/discord-webhook/
+    '''
+    return f'{url}+{category}'
+
+
 '''
 TODO
 MAKE LOGO
