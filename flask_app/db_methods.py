@@ -28,7 +28,8 @@ def ShowAllUsers():
 def AddUser(user_id, username):
     initial_user_data = {
         'username': username,
-        'categories': list()
+        'categories': list(),
+        'webhookURL': None
     }
     redis_client.set(name=str(user_id), value=str(initial_user_data))
 
@@ -96,6 +97,7 @@ def AddOrChangeWebHookForCategory(user_id, category_name, webhook_url):
         if category['name'] == category_name:
             if initializeWebHook(webhook_url=webhook_url):
                 category['webhookURL'] = webhook_url
+                redis_client.set(user_id, str(data))
                 return True
             else:
                 return False
@@ -103,5 +105,6 @@ def AddOrChangeWebHookForCategory(user_id, category_name, webhook_url):
 
 #DeleteCategory(user_id=1315843447752814592, category_name='test1111')
 #AddUser(user_id=1553622983142670336, username='bookwheat')
-print(ShowSpecifcUserData(user_id=1315843447752814592))
+# print(ShowSpecifcUserData(user_id=1315843447752814592))
+# DeleteAllUsers()
 # print(CheckIfCategoryExits(user_id=1553622983142670336,category_name='water'))

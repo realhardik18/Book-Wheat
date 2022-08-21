@@ -54,7 +54,8 @@ def AddCategory(user_id, category_name):
     if len(data['categories']) == 0 or category_exists == False:
         new_category_data = {
             'name': category_name,
-            'data': list()
+            'data': list(),
+            'webhookURL': None
         }
         data['categories'].append(new_category_data)
         redis_client.set(user_id, str(data))
@@ -75,6 +76,12 @@ def AddTweetInCategory(user_id, category_name, url_to_tweet):
             break
 
 
+def ReturnWebhook(user_id, category_name):
+    data = ShowSpecifcUserData(user_id)
+    for category in data['categories']:
+        if category['webhookURL'] != None:
+            return category['webhookURL']
+    return None
 # AddUser(user_id=1065343305993588736, username='test')
 # print(ShowSpecifcUserData(user_id=1065343305993588736))
 # print(CheckIfUserExists(1553622983142670336))

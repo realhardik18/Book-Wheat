@@ -2,7 +2,8 @@ import tweepy
 # https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
 from creds import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
 from twitter_methods import GetLastCheckedTweetID, UpdateLastCheckedTweetID
-from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser
+from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser, ReturnWebhook
+from webhook import sendMessage
 import time
 import random
 import json
@@ -96,8 +97,16 @@ while True:
                                 category_name=category)
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
+                print(ReturnWebhook(user_id=str(
+                    tweet.author_id), category_name=category))
+                if ReturnWebhook(user_id=str(tweet.author_id), category_name=category) != None:
+                    sendMessage(webhook_url=ReturnWebhook(user_id=str(
+                        tweet.author_id), category_name=category), tweet_url=url_to_tweet)
+                    tweet_content = f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})]\nI have also sent the tweet to the discord channle associated to this category!"
+                else:
+                    tweet_content = f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})]"
                 reply_to_tweet(tweet_to_reply_to_id=tweet.id,
-                               tweet_content=f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})")
+                               tweet_content=tweet_content)
                 # print(list(client.get_user(id=tweet.author_id,user_auth=True))[0].username)
                 time.sleep(5)
             except KeyError:

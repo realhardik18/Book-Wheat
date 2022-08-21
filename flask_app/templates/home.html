@@ -74,6 +74,7 @@
                 <td><strong>Name of Category</strong></td>
                 <td><strong>Number of tweets saved</strong></td>
                 <td><strong>Link to veiw category data</strong></td>
+                <td><strong>Discord Intergration</td>
                 <td><strong>Delete Category</strong></td>
             </tr>
             {% for item in category_data %}
@@ -82,7 +83,12 @@
                     <td>{{item['name']}}</td>
                     <td>{{item['data']|length}}</td>
                     <td><a href="/category/{{item['name']}}">saved tweets in {{item['name']}}</a></td>
-                    <td><a href="/delete/{{item['name']}}" class="btn btn-danger">Delete 🗑️</a></td>
+                    {% if item['webhookURL'] %}
+                    <td>✅</td>
+                    {% else %}
+                    <td>❌</td>
+                    {%endif%}
+                    <td><a href="/delete/{{item['name']}}" class="btn btn-danger">Delete</a></td>
                 </div>
             </tr>
             {% endfor %}
