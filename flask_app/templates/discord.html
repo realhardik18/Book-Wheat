@@ -53,6 +53,18 @@
             </div>
         </div>
     </nav>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        {{message}}
+        <a type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">dismiss</span>
+        </a>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {%endwith%}
     <h1 class="home-welcome">You can set up BookWheat to send your saved tweets to the
         discordchannle of your choice!</h1>
     <h2 class="home-text">Fillout this form to add/edit discord webhooks to your desired category</h2>
@@ -60,7 +72,7 @@
         <form action="/result" method="post">
             <label for="URL" class="input-lable">Enter webhook url</label>
             <input type="url" id="url" name="url" required>
-            <h2>choose the category</h2>
+            <h3>choose the category</h3>
             {% for item in category_data %}
             <div class="form-check">
                 <input class="form-check-input" type="radio" name="input-radios" id="{{item}}" value="{{item}}" checked
@@ -70,8 +82,8 @@
                 </label>
             </div>
             {%endfor%}
-            <input type="submit" class="btn btn-outline-primary btn" style="margin-top: 10px;">
-            <input type="reset" class="btn btn-outline-danger btn" style="margin-top: 10px;">
+            <input type="submit" class="btn btn-outline-primary btn" style="margin-top: 10px; margin-bottom:20px">
+            <input type="reset" class="btn btn-outline-danger btn" style="margin-top: 10px; margin-bottom:20px">
         </form>
     </div>
 </body>

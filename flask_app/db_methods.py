@@ -1,7 +1,7 @@
 import ast
 import redis
 from creds import REDIS_HOST, REDIS_PASSWORD, REDIS_PORT
-
+from webhook import initializeWebHook
 redis_client = redis.Redis(
     host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD)
 
@@ -90,7 +90,18 @@ def DeleteCategory(user_id, category_name):
     redis_client.set(user_id, str(data))
 
 
+def AddOrChangeWebHookForCategory(user_id, category_name, webhook_url):
+    data = ShowSpecifcUserData(user_id)
+    for category in data['categories']:
+        if category['name'] == category_name:
+            if initializeWebHook(webhook_url=webhook_url):
+                category['webhookURL'] = webhook_url
+                return True
+            else:
+                return False
+
+
 #DeleteCategory(user_id=1315843447752814592, category_name='test1111')
 #AddUser(user_id=1553622983142670336, username='bookwheat')
-# print(ShowSpecifcUserData(user_id=1315843447752814592))
+print(ShowSpecifcUserData(user_id=1315843447752814592))
 # print(CheckIfCategoryExits(user_id=1553622983142670336,category_name='water'))

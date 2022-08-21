@@ -3,7 +3,7 @@ import json
 import ast
 from flask import render_template, Flask, redirect, url_for, request, flash
 from flask_dance.contrib.twitter import make_twitter_blueprint, twitter
-from db_methods import ShowSpecifcUserData, CheckIfUserExists, AddUser, GetAllCategories, ShowCategoryData, DeleteCategory
+from db_methods import ShowSpecifcUserData, CheckIfUserExists, AddUser, GetAllCategories, ShowCategoryData, DeleteCategory, AddOrChangeWebHookForCategory
 from creds import API_KEY, API_SECRET, APP_SECRET_KEY
 from twitter_methods import GetEmbededTweetHTML
 
@@ -83,15 +83,26 @@ async def discord():
 
 @app.route('/result', methods=['POST'])
 def post():
+    resp = twitter.get("https://api.twitter.com/2/users/me")
+    user_id = ast.literal_eval(str(resp.text))['data']['id']
+    username = ast.literal_eval(str(resp.text))['data']['username']
     url = request.form['url']
     category = request.form['input-radios']
     category = ast.literal_eval(category)['name']
+    if AddOrChangeWebHookForCategory(user_id=user_id, category_name=category, webhook_url=url) == True:
+        flash(
+            f'Added discord intergartion for category: "{category}" successfully!')
+    else:
+        flash(f'The webhook URL entered was not found! please try again')
+    return redirect(url_for('discord'))
+
     '''
-    WORK ON
-    CHeCKING FOR VALID WEBHOOK
-    SAVING THE WEBHOOK DATA
+    WORK ON DONE
+    CHeCKING FOR VALID WEBHOOK DONE
+    SAVING THE WEBHOOK DATA DONE
     AND THEN INTERGATING WITH TWITTER BOT TO SEND THE WEBHOOK
     MAKE WEBHOOK PRETTY
+    MAKE WEEBHOOK SHOW DATA IN WEBSITE LIKE IF ITS VALID OR NOT
     MAKE WEBHOOK METHODS IN WEBHOOKS.PY OR SHMTN
     https://pypi.org/project/discord-webhook/
     '''
