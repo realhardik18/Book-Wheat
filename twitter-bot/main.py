@@ -81,9 +81,14 @@ while True:
                 category = ' '.join(tweet.text.split(
                     ' ')[tweet.text.split(' ').index('@Book_Wheat')+1:])
                 # profiles['users'][str(tweet.author_id)].append(data_dict)
-                if CheckIfUserExists(user_id=tweet.author_id) == False:
-                    AddUser(user_id=tweet.author_id)
-                if category in GetAllCategories(str(tweet.author_id)):
+                if CheckIfUserExists(user_id=str(tweet.author_id)) == False:
+                    AddUser(user_id=str(tweet.author_id), username=list(client.get_user(id=tweet.author_id,
+                                                                                        user_auth=True))[0].username)
+                    # time.sleep(2)
+                all_categories = GetAllCategories(str(tweet.author_id))
+                # print(all_categories,str(tweet.author_id))
+                # time.sleep(2)
+                if category in all_categories and len(all_categories) != 0:
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
                 else:
@@ -93,12 +98,13 @@ while True:
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
                 reply_to_tweet(tweet_to_reply_to_id=tweet.id,
                                tweet_content=f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})")
-                time.sleep(90)
+                # print(list(client.get_user(id=tweet.author_id,user_auth=True))[0].username)
+                time.sleep(5)
             except KeyError:
                 print('oops')
     else:
         print('no new tweets')
-        time.sleep(90)
+        time.sleep(5)
     '''
     note to self
     increase time.sleep() when pushing to prodcution

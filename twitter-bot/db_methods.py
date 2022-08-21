@@ -8,9 +8,10 @@ redis_client = redis.Redis(
 
 def CheckIfUserExists(user_id):
     for key in redis_client.scan_iter():
-        #print(str(key)[2:-1], user_id)
+        # print(str(key)[2:-1], user_id)
         if str(key)[2:-1] == str(user_id):
             return True
+    return False
 
 
 def DeleteAllUsers():
@@ -34,11 +35,13 @@ def AddUser(user_id, username):
 
 
 def ShowSpecifcUserData(user_id):
+    # print(f'HELLO\n{str(redis_client.get(name=str(user_id)))[2:-1]}\nhello')
     return ast.literal_eval(str(redis_client.get(name=str(user_id)))[2:-1])
+    # return str(redis_client.get(name=str(user_id)))[2:-1]
 
 
 def GetAllCategories(user_id):
-    data = ShowSpecifcUserData(user_id)
+    data = ShowSpecifcUserData(str(user_id))
     return data['categories']
 
 
@@ -72,5 +75,11 @@ def AddTweetInCategory(user_id, category_name, url_to_tweet):
             break
 
 
-#AddUser(user_id=1553622983142670336, username='bookwheat')
+# AddUser(user_id=1065343305993588736, username='test')
+# print(ShowSpecifcUserData(user_id=1065343305993588736))
+# print(CheckIfUserExists(1553622983142670336))
 # print(ShowSpecifcUserData(user_id=1553622983142670336))
+# print((GetAllCategories(user_id=1065343305993588736)))
+# print(len(GetAllCategories(str(1065343305993588736))),
+# type(GetAllCategories(str(1065343305993588736))))
+# DeleteUser(user_id=1553622983142670336)
