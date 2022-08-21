@@ -79,11 +79,14 @@ def AddTweetInCategory(user_id, category_name, url_to_tweet):
 def ReturnWebhook(user_id, category_name):
     data = ShowSpecifcUserData(user_id)
     for category in data['categories']:
-        if category['webhookURL'] != None:
-            return category['webhookURL']
+        if category['name'] == category_name:
+            if category['webhookURL'] != None:
+                return category['webhookURL']
     return None
+
+
 # AddUser(user_id=1065343305993588736, username='test')
-# print(ShowSpecifcUserData(user_id=1065343305993588736))
+# rint(ShowSpecifcUserData(user_id=1065343305993588736))
 # print(CheckIfUserExists(1553622983142670336))
 # print(ShowSpecifcUserData(user_id=1553622983142670336))
 # print((GetAllCategories(user_id=1065343305993588736)))

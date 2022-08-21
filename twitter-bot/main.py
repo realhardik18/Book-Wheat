@@ -2,7 +2,7 @@ import tweepy
 # https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
 from creds import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
 from twitter_methods import GetLastCheckedTweetID, UpdateLastCheckedTweetID
-from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser, ReturnWebhook
+from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser, ReturnWebhook, ShowSpecifcUserData
 from webhook import sendMessage
 import time
 import random
@@ -89,6 +89,7 @@ while True:
                 all_categories = GetAllCategories(str(tweet.author_id))
                 # print(all_categories,str(tweet.author_id))
                 # time.sleep(2)
+
                 if category in all_categories and len(all_categories) != 0:
                     AddTweetInCategory(user_id=str(
                         tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
@@ -107,13 +108,14 @@ while True:
                     tweet_content = f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})]"
                 reply_to_tweet(tweet_to_reply_to_id=tweet.id,
                                tweet_content=tweet_content)
+                print(ShowSpecifcUserData(user_id=str(tweet.author_id)))
                 # print(list(client.get_user(id=tweet.author_id,user_auth=True))[0].username)
-                time.sleep(5)
+                time.sleep(90)
             except KeyError:
                 print('oops')
     else:
         print('no new tweets')
-        time.sleep(5)
+        time.sleep(90)
     '''
     note to self
     increase time.sleep() when pushing to prodcution
