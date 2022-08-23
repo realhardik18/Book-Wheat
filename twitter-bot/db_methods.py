@@ -85,8 +85,24 @@ def ReturnWebhook(user_id, category_name):
     return None
 
 
+def AddInRepliedTweetsList(tweet_id):
+    new_data = str(redis_client.get('replied'))[2:-1]+','+str(tweet_id)
+    redis_client.set(name='replied', value=new_data)
+    data = str(redis_client.get('replied'))[1:][1:-1]
+    return data.split(',')
+
+
+def GetRepliedTweetsIds():
+    return str(redis_client.get('replied'))[1:][1:-1].split(',')
+
+
+print(GetRepliedTweetsIds())
+
+# print(ShowAllUsers())
+#redis_client.set(name='replied', value=1065343305993588736)
+# print(redis_client.get('replied'))
 # AddUser(user_id=1065343305993588736, username='test')
-# rint(ShowSpecifcUserData(user_id=1065343305993588736))
+# print(ShowSpecifcUserData(user_id=1315843447752814592))
 # print(CheckIfUserExists(1553622983142670336))
 # print(ShowSpecifcUserData(user_id=1553622983142670336))
 # print((GetAllCategories(user_id=1065343305993588736)))

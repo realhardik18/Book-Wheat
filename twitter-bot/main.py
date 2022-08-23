@@ -2,7 +2,7 @@ import tweepy
 # https://docs.tweepy.org/en/stable/client.html#tweepy.Client.create_tweet
 from creds import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_KEY, ACCESS_SECRET
 from twitter_methods import GetLastCheckedTweetID, UpdateLastCheckedTweetID
-from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser, ReturnWebhook, ShowSpecifcUserData
+from db_methods import GetAllCategories, AddTweetInCategory, AddCategory, CheckIfUserExists, AddUser, ReturnWebhook, ShowSpecifcUserData, GetRepliedTweetsIds, AddInRepliedTweetsList
 from webhook import sendMessage
 import time
 import random
@@ -62,60 +62,68 @@ while True:
             UpdateLastCheckedTweetID(tweet.id)
             base_url = 'https://twitter.com/'
             try:
-                main_tweet = tweet.data['referenced_tweets'][0]
-                data = client.get_tweet(id=main_tweet['id'],
-                                        user_auth=True, expansions='author_id')
-                parent_tweet_id = str(list(data)[0]['id'])
-                parent_user_name = str(list(data)[1]['users'][0])
-                url_to_tweet = base_url+parent_user_name+'/'+'status/'+parent_tweet_id
-                #print(tweet.text, tweet.author_id)
-                # print(url_to_tweet)
-                '''
-                if str(tweet.author_id) not in profiles['users'].keys():
-                    profiles['users'][str(tweet.author_id)] = list()
-                #to check if user exists
-                '''
+                # print(GetRepliedTweetsIds())
+                # print(type(str(tweet.id)))
+                if str(tweet.id) not in GetRepliedTweetsIds():
+                    print(f"{tweet.id} was not there so i added it")
+                    main_tweet = tweet.data['referenced_tweets'][0]
+                    data = client.get_tweet(id=main_tweet['id'],
+                                            user_auth=True, expansions='author_id')
+                    parent_tweet_id = str(list(data)[0]['id'])
+                    parent_user_name = str(list(data)[1]['users'][0])
+                    url_to_tweet = base_url+parent_user_name+'/'+'status/'+parent_tweet_id
+                    #print(tweet.text, tweet.author_id)
+                    # print(url_to_tweet)
+                    '''
+                    if str(tweet.author_id) not in profiles['users'].keys():
+                        profiles['users'][str(tweet.author_id)] = list()
+                    #to check if user exists
+                    '''
 
-                data_dict = dict()
-                # data_dict['saved_at'] = tweet.created_at WORK ON THIS LATER
-                url_to_tweet = url_to_tweet
-                category = ' '.join(tweet.text.split(
-                    ' ')[tweet.text.split(' ').index('@Book_Wheat')+1:])
-                # profiles['users'][str(tweet.author_id)].append(data_dict)
-                if CheckIfUserExists(user_id=str(tweet.author_id)) == False:
-                    AddUser(user_id=str(tweet.author_id), username=list(client.get_user(id=tweet.author_id,
-                                                                                        user_auth=True))[0].username)
+                    data_dict = dict()
+                    # data_dict['saved_at'] = tweet.created_at WORK ON THIS LATER
+                    url_to_tweet = url_to_tweet
+                    category = ' '.join(tweet.text.split(
+                        ' ')[tweet.text.split(' ').index('@Book_Wheat')+1:])
+                    # profiles['users'][str(tweet.author_id)].append(data_dict)
+                    if CheckIfUserExists(user_id=str(tweet.author_id)) == False:
+                        AddUser(user_id=str(tweet.author_id), username=list(client.get_user(id=tweet.author_id,
+                                                                                            user_auth=True))[0].username)
+                        # time.sleep(2)
+                    all_categories = GetAllCategories(str(tweet.author_id))
+                    # print(all_categories,str(tweet.author_id))
                     # time.sleep(2)
-                all_categories = GetAllCategories(str(tweet.author_id))
-                # print(all_categories,str(tweet.author_id))
-                # time.sleep(2)
 
-                if category in all_categories and len(all_categories) != 0:
-                    AddTweetInCategory(user_id=str(
-                        tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
+                    if category in all_categories and len(all_categories) != 0:
+                        AddTweetInCategory(user_id=str(
+                            tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
+                    else:
+                        AddCategory(user_id=str(tweet.author_id),
+                                    category_name=category)
+                        AddTweetInCategory(user_id=str(
+                            tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
+                    # print(ReturnWebhook(user_id=str(
+                        # tweet.author_id), category_name=category))
+                    if ReturnWebhook(user_id=str(tweet.author_id), category_name=category) != None:
+                        sendMessage(webhook_url=ReturnWebhook(user_id=str(
+                            tweet.author_id), category_name=category), tweet_url=url_to_tweet)
+                        tweet_content = f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})]\nI have also sent the tweet to the discord channle associated to this category!"
+                    else:
+                        tweet_content = f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})]"
+                    reply_to_tweet(tweet_to_reply_to_id=tweet.id,
+                                   tweet_content=tweet_content)
+                    # print(ShowSpecifcUserData(user_id=str(tweet.author_id)))
+                    # print(list(client.get_user(id=tweet.author_id,user_auth=True))[0].username)
+                    AddInRepliedTweetsList(tweet.id)
+                    time.sleep(5)
                 else:
-                    AddCategory(user_id=str(tweet.author_id),
-                                category_name=category)
-                    AddTweetInCategory(user_id=str(
-                        tweet.author_id), category_name=category, url_to_tweet=url_to_tweet)
-                print(ReturnWebhook(user_id=str(
-                    tweet.author_id), category_name=category))
-                if ReturnWebhook(user_id=str(tweet.author_id), category_name=category) != None:
-                    sendMessage(webhook_url=ReturnWebhook(user_id=str(
-                        tweet.author_id), category_name=category), tweet_url=url_to_tweet)
-                    tweet_content = f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})]\nI have also sent the tweet to the discord channle associated to this category!"
-                else:
-                    tweet_content = f"Saved the tweet! [category name->{category} ({''.join(random.choice('0123456789ABCDEF') for i in range(4))})]"
-                reply_to_tweet(tweet_to_reply_to_id=tweet.id,
-                               tweet_content=tweet_content)
-                print(ShowSpecifcUserData(user_id=str(tweet.author_id)))
-                # print(list(client.get_user(id=tweet.author_id,user_auth=True))[0].username)
-                time.sleep(90)
+                    print(f'already replied to the tweet {tweet.id}')
+
             except KeyError:
                 print('oops')
     else:
         print('no new tweets')
-        time.sleep(90)
+        time.sleep(5)
     '''
     note to self
     increase time.sleep() when pushing to prodcution
