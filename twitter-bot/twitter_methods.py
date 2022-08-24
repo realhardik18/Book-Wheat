@@ -29,3 +29,4 @@ def GetTweetInfo(tweet_url):
 
 # UpdateLastCheckedTweetID(1561343519364911104)
 # print(GetLastCheckedTweetID())
+# UpdateLastCheckedTweetID(1562432456510189568)

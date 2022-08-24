@@ -96,11 +96,12 @@ def GetRepliedTweetsIds():
     return str(redis_client.get('replied'))[1:][1:-1].split(',')
 
 
-print(GetRepliedTweetsIds())
+# print(GetRepliedTweetsIds())
+
 
 # print(ShowAllUsers())
 #redis_client.set(name='replied', value=1065343305993588736)
-# print(redis_client.get('replied'))
+# print(redis_client.delete('replied'))
 # AddUser(user_id=1065343305993588736, username='test')
 # print(ShowSpecifcUserData(user_id=1315843447752814592))
 # print(CheckIfUserExists(1553622983142670336))
@@ -109,3 +110,4 @@ print(GetRepliedTweetsIds())
 # print(len(GetAllCategories(str(1065343305993588736))),
 # type(GetAllCategories(str(1065343305993588736))))
 # DeleteUser(user_id=1553622983142670336)
+# DeleteUser(1315843447752814592)

@@ -54,18 +54,20 @@ for tweet in search_mentions()[0]:
 '''
 print('hello there')
 while True:
+    replied_to = list()
     mentioned_tweets = search_mentions(
         last_tweet_id=GetLastCheckedTweetID())[0]
     if mentioned_tweets != None:
         #print('ello', type(mentioned_tweets))
         for tweet in mentioned_tweets:
-            UpdateLastCheckedTweetID(tweet.id)
-            base_url = 'https://twitter.com/'
-            try:
-                # print(GetRepliedTweetsIds())
-                # print(type(str(tweet.id)))
-                if str(tweet.id) not in GetRepliedTweetsIds():
-                    print(f"{tweet.id} was not there so i added it")
+            if tweet.id not in replied_to:
+                UpdateLastCheckedTweetID(tweet.id)
+                base_url = 'https://twitter.com/'
+                try:
+                    # print(GetRepliedTweetsIds())
+                    # print(type(str(tweet.id)))
+                    # if str(tweet.id) not in GetRepliedTweetsIds():
+                    print(f"{tweet.id} was not there so i added it!")
                     main_tweet = tweet.data['referenced_tweets'][0]
                     data = client.get_tweet(id=main_tweet['id'],
                                             user_auth=True, expansions='author_id')
@@ -114,13 +116,12 @@ while True:
                                    tweet_content=tweet_content)
                     # print(ShowSpecifcUserData(user_id=str(tweet.author_id)))
                     # print(list(client.get_user(id=tweet.author_id,user_auth=True))[0].username)
-                    AddInRepliedTweetsList(tweet.id)
-                    time.sleep(5)
-                else:
-                    print(f'already replied to the tweet {tweet.id}')
-
-            except KeyError:
-                print('oops')
+                    replied_to.append(tweet.id)
+                    time.sleep(10)
+                except KeyError:
+                    print('oops')
+            else:
+                print('no new ttweet')
     else:
         print('no new tweets')
         time.sleep(5)
