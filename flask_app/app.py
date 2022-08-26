@@ -107,15 +107,3 @@ def post():
     https://pypi.org/project/discord-webhook/
     '''
     return f'{url}+{category}'
-
-
-'''
-TODO
-MAKE LOGO
-AND UI IN A BETTER MANNER
-'''
-
-# WORK ONLY AND ONLY ON THIS AND FINSH IT UP AND SUBMIT BEFORE WORKING
-# ON DISCORD PART!
-# USE BOOTSTRAP STFU
-# AND HOST SITE
