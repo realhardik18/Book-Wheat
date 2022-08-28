@@ -6,9 +6,8 @@ BookWheat is a Twitter bot that helps you save important tweets which are releva
 
 # Overview video!
 
-Here's a short video that explains how BookWheat was made, and the tools it uses such as Redis,Tweepy,Heroku and Discord.py
-
-#todo
+Here's a short video that explains how BookWheat was made, and the tools it uses such as Redis,Tweepy,Heroku and Discord.py(click on the picture!)
+[![vid](https://img.youtube.com/vi/UKb11J7cTY0/0.jpg)](https://www.youtube.com/watch?v=UKb11J7cTY0)
 
 ## How it works
 
