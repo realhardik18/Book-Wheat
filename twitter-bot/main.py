@@ -125,17 +125,3 @@ while True:
     else:
         print('no new tweets')
         time.sleep(5)
-    '''
-    note to self
-    increase time.sleep() when pushing to prodcution
-    add creation_date arrtibute later
-    '''
-
-'''
-todo
-get tweets[DONE]
-work on local databse system[DONE]
-intergrate with redis[DONE]
-work on flask site
-work on discord aspect
-'''
